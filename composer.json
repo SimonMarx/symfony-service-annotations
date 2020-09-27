@@ -1,0 +1,14 @@
+{
+  "name": "simonmarx/symfony-service-annotations",
+  "type": "symfony-bundle",
+  "version": "1.0.0",
+  "require": {
+    "php": ">=7.4",
+    "doctrine/annotations": "^1.10"
+  },
+  "autoload": {
+    "psr-4": {
+      "SimonMarx\\Symfony\\Bundles\\ServiceAnnotations\\": ""
+    }
+  }
+}
