@@ -1,9 +1,10 @@
 {
   "name": "simonmarx/symfony-service-annotations",
   "type": "symfony-bundle",
-  "version": "1.0.0",
+  "license": "MIT",
   "require": {
     "php": ">=7.4",
+    "symfony/framework-bundle": ">=3.0",
     "doctrine/annotations": "^1.10"
   },
   "autoload": {

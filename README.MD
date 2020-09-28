@@ -1,28 +1,49 @@
-Symfony Service Definitions via Annotations
-==
+Installation
+============
 
-When using Symfonys autowire feature, a lot of stuff (e.g service aliases / service tags) must be configured in the
-services.yaml which makes the autowire feature a bit useless then.
+```console
+$ composer require simonmarx/symfony-service-annotations
+```
 
-This bundle tries to prevent the developer from having to enter the services.yaml and configure services there.
+### Enable the Bundle (when not using Symfony flex)
 
+Enable the bundle by adding it to the list of registered bundles
+in the `config/bundles.php` file of your project:
 
-##Important
+```php
+// config/bundles.php
+
+return [
+    // ...
+    \SimonMarx\Symfony\Bundles\ServiceAnnotations\SimaServiceAnnotationsBundle::class => ['all' => true],
+];
+```
+
+Usage
+=====
+
+When using Symfonys autowire feature, some stuff like service aliases or service tags must be configured in the
+services.yaml/xml file.
+
+This bundle tries to prevent the developer from having to enter the services.yaml and configure services there in the class itselfs.
+
+It makes service classes feels more like a standalone service since the class holds all service configuration itself.
+
+###Important
 Bundle and readme is currently under construction but should work anyways.
 
 * [ ] Write better documentation
 * [ ] Add tests
 * [ ] Add decoration support 
 
-##Examples
+###Examples
 
 #### Example 1: Tagged services with an interfaces
 
+When annotate an interface or abstract class with `@ServiceTag` all extending classes which implements the interface or 
+extends the abstract class will be registered as a tagged service.
 
-When annotate an interface with `@ServiceTag` all classes which implements the interface will be registered as a tagged service.
-This logic only works with interfaces and abstract classes.
-
-When you want to tag a single class instead a interface or abstract class, simply use the annotation the same way as in this example.
+When you want to tag a single class instead an interface or abstract class, simply use the annotation the same way as in this example.
 ```php
 <?php
 
