@@ -200,3 +200,46 @@ class AnotherChild extends MyParent {}
 class SomeChild extends MyParent {}
 
 ```
+
+
+#### Example 5: DependencyInjection via Annotation
+
+In case you want to inject something from your container into the constructor (e.g. tagged_iterator) which is not handled by autowiring
+you can use the `@DependencyInjection` annotation.
+
+```php
+<?php
+
+namespace App;
+
+use SimonMarx\Symfony\Bundles\ServiceAnnotations\Annotation\DependencyInjection;
+
+class SomeClass {
+    /**
+     * The annotation also works for public properties injection
+     * 
+     * @DependencyInjection(serviceId="my_service")
+     */
+    public SomeInterface $service;
+
+    /**
+     * if you have more than one argument in constructor use "target" to identify which argument should get the injection
+     *
+     * @DependencyInjection(target="handlers", tagged="your_tag_id")
+     * @DependencyInjection(target="anotherService", serviceId="some_service")
+     */
+    public function __construct(SomeAutowiredService $service, iterable $handlers, SomeService $anotherService) {
+        
+    }   
+
+    /**
+     * if you have only one argument in your constructor there is no need for the "target" option
+     *
+     * @DependencyInjection(tagged="your_tag_id")
+     */
+    public function __construct(iterable $handlers) {
+        
+    }   
+}
+
+```

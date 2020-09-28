@@ -11,6 +11,7 @@ use App\Serializer\CircularReference\DefaultCircularReferenceHandler;
 use Doctrine\Common\Annotations\AnnotationReader;
 use ReflectionClass;
 use SimonMarx\Symfony\Bundles\ServiceAnnotations\Annotation\IgnoreParentServiceAnnotations;
+use SimonMarx\Symfony\Bundles\ServiceAnnotations\Struct\ClassAnnotationScan;
 use Symfony\Component\DependencyInjection\Definition;
 
 trait CompilerPassServiceAnnotationTrait
@@ -21,9 +22,12 @@ trait CompilerPassServiceAnnotationTrait
 
     private array $annotationCache = [];
 
+    private array $fullScanCache = [];
+
     public function __construct()
     {
         $this->annotationReader = new AnnotationReader();
+        AnnotationReader::addGlobalIgnoredName('required');
     }
 
     private function definitionHasValidClass(Definition $definition): bool
@@ -64,10 +68,10 @@ trait CompilerPassServiceAnnotationTrait
             return;
         }
 
-        $this->annotationCache[$cacheKey] = $this->crawlAnnotationsRecursive($rc);
+        $this->annotationCache[$cacheKey] = $this->crawlClassAnnotationsRecursive($rc);
     }
 
-    private function crawlAnnotationsRecursive(ReflectionClass $reflectionClass): array
+    private function crawlClassAnnotationsRecursive(ReflectionClass $reflectionClass): array
     {
         $annotations = $this->annotationReader->getClassAnnotations($reflectionClass);
         $ignored = $this->annotationReader->getClassAnnotation($reflectionClass, IgnoreParentServiceAnnotations::class);
@@ -79,7 +83,7 @@ trait CompilerPassServiceAnnotationTrait
                 || $reflectionClass->getParentClass()->isInterface()
             )
         ) {
-            $parentAnnotations = $this->crawlAnnotationsRecursive($reflectionClass->getParentClass());
+            $parentAnnotations = $this->crawlClassAnnotationsRecursive($reflectionClass->getParentClass());
 
             if ($ignored instanceof IgnoreParentServiceAnnotations) {
                 foreach ($parentAnnotations as $parentAnnotation) {
@@ -93,7 +97,7 @@ trait CompilerPassServiceAnnotationTrait
         }
 
         foreach ($reflectionClass->getInterfaces() as $interface) {
-            $interfaceAnnotations = $this->crawlAnnotationsRecursive($interface);
+            $interfaceAnnotations = $this->crawlClassAnnotationsRecursive($interface);
 
             if ($ignored instanceof IgnoreParentServiceAnnotations) {
                 foreach ($interfaceAnnotations as $interfaceAnnotation) {
@@ -134,5 +138,16 @@ trait CompilerPassServiceAnnotationTrait
         $cacheKey = $this->getDefinitionCacheKey($definition);
 
         return $this->annotationCache[$cacheKey] ?? [];
+    }
+
+    private function fullAnnotationScan(Definition $definition): ClassAnnotationScan
+    {
+        $cacheKey = $this->getDefinitionCacheKey($definition);
+
+        if (false === \array_key_exists($cacheKey, $this->fullScanCache)) {
+            $this->fullScanCache[$cacheKey] = new ClassAnnotationScan($definition->getClass());
+        }
+
+        return $this->fullScanCache[$cacheKey];
     }
 }
