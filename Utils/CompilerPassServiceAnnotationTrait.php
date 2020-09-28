@@ -4,10 +4,6 @@
 namespace SimonMarx\Symfony\Bundles\ServiceAnnotations\Utils;
 
 
-use App\Response\FooInterface;
-use App\Response\ResponseContext;
-use App\Response\ResponseFactory;
-use App\Serializer\CircularReference\DefaultCircularReferenceHandler;
 use Doctrine\Common\Annotations\AnnotationReader;
 use ReflectionClass;
 use SimonMarx\Symfony\Bundles\ServiceAnnotations\Annotation\IgnoreParentServiceAnnotations;

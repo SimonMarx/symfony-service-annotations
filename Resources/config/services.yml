@@ -1,0 +1,6 @@
+services:
+  SimonMarx\Symfony\Bundles\ServiceAnnotations\ArgumentResolver\DependencyInjectionAnnotationValueResolver:
+    arguments:
+      $container: '@Symfony\Component\DependencyInjection\ContainerInterface'
+    tags:
+      - { name: 'controller.argument_value_resolver', priority: 1000 }
