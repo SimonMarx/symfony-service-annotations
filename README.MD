@@ -202,7 +202,7 @@ class SomeChild extends MyParent {}
 ```
 
 
-#### Example 5: DependencyInjection via Annotation
+#### Example 6: DependencyInjection via Annotation
 
 In case you want to inject something from your container into the constructor (e.g. tagged_iterator) which is not handled by autowiring
 you can use the `@DependencyInjection` annotation.

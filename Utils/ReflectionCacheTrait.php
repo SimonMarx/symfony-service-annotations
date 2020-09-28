@@ -3,8 +3,6 @@
 
 namespace SimonMarx\Symfony\Bundles\ServiceAnnotations\Utils;
 
-
-use App\Command\PermissionPersistCommand;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;

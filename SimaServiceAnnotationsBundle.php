@@ -21,8 +21,8 @@ class SimaServiceAnnotationsBundle extends Bundle
         $container
             ->addCompilerPass(new ServiceTagPass())
             ->addCompilerPass(new ServiceAliasPass())
+            ->addCompilerPass(new DependencyInjectionPass())
             ->addCompilerPass(new ServiceTagArgumentPass())
-            ->addCompilerPass(new NoServicePass())
-            ->addCompilerPass(new DependencyInjectionPass());
+            ->addCompilerPass(new NoServicePass());
     }
 }

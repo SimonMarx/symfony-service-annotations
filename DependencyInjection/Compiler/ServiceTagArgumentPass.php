@@ -4,7 +4,6 @@
 namespace SimonMarx\Symfony\Bundles\ServiceAnnotations\DependencyInjection\Compiler;
 
 
-use App\Serializer\CircularReference\DefaultCircularReferenceHandler;
 use SimonMarx\Symfony\Bundles\ServiceAnnotations\Annotation\ServiceTag;
 use SimonMarx\Symfony\Bundles\ServiceAnnotations\Annotation\ServiceTagArgument;
 use SimonMarx\Symfony\Bundles\ServiceAnnotations\Exception\InvalidServiceAnnotationException;
