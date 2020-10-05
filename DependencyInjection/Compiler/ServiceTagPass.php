@@ -23,7 +23,7 @@ class ServiceTagPass implements CompilerPassInterface
             }
 
             /** @var ServiceTag[] $tags */
-            $tags = $this->getDefinitionAnnotation($definition, ServiceTag::class);
+            $tags = $this->getDefinitionAnnotations($definition, ServiceTag::class);
 
             foreach ($tags as $tag) {
                 $definition->addTag($tag->getName(), $tag->getAttributes());

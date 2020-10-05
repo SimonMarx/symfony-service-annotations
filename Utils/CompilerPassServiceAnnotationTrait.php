@@ -114,10 +114,10 @@ trait CompilerPassServiceAnnotationTrait
         return \md5($definition->getClass());
     }
 
-    private function getDefinitionAnnotation(Definition $definition, string $annotationClass): array
+    private function findDefinitionAnnotation(Definition $definition, string $annotationClass): ?object
     {
         if (false === $this->definitionHasAnnotation($definition, $annotationClass)) {
-            return [];
+            return null;
         }
 
         $annotations = \array_filter(
@@ -125,15 +125,26 @@ trait CompilerPassServiceAnnotationTrait
             fn($annotation) => $annotation instanceof $annotationClass
         );
 
-        return \array_values($annotations);
+        return \array_values($annotations)[0] ?? null;
     }
 
-    private function getDefinitionAnnotations(Definition $definition): array
+    private function getDefinitionAnnotations(Definition $definition, ?string $annotationClass = null): array
     {
         $this->warmupDefinitionAnnotationCache($definition);
         $cacheKey = $this->getDefinitionCacheKey($definition);
 
-        return $this->annotationCache[$cacheKey] ?? [];
+        $annotations = $this->annotationCache[$cacheKey] ?? [];
+
+        if (null === $annotationClass) {
+            return $annotations;
+        }
+
+        return \array_values(
+            \array_filter(
+                $annotations,
+                fn($annotation) => $annotation instanceof $annotationClass
+            )
+        );
     }
 
     private function fullAnnotationScan(Definition $definition): ClassAnnotationScan

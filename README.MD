@@ -241,5 +241,23 @@ class SomeClass {
         
     }   
 }
+```
 
+#### Example 7: Assign Parent service
+
+If your current service requires a parent service, just annotate your service class with `@ParentService`, the compilerpass
+will redefine your service as a ChildDefinition and replace it in the service container
+
+```php
+<?php
+
+namespace App;
+
+use SimonMarx\Symfony\Bundles\ServiceAnnotations\Annotation\ParentService;
+
+/**
+ * @ParentService("App\Service\ParentService")
+ */
+class ChildService {
+}
 ```

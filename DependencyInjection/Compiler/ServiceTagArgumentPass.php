@@ -23,9 +23,9 @@ class ServiceTagArgumentPass implements CompilerPassInterface
             }
 
             /** @var ServiceTagArgument[] $arguments */
-            $arguments = $this->getDefinitionAnnotation($definition, ServiceTagArgument::class);
+            $arguments = $this->getDefinitionAnnotations($definition, ServiceTagArgument::class);
             /** @var ServiceTag[] $serviceTags */
-            $serviceTags = $this->getDefinitionAnnotation($definition, ServiceTag::class);
+            $serviceTags = $this->getDefinitionAnnotations($definition, ServiceTag::class);
 
             $attributesByTag = [];
 

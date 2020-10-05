@@ -6,6 +6,7 @@ namespace SimonMarx\Symfony\Bundles\ServiceAnnotations;
 
 use SimonMarx\Symfony\Bundles\ServiceAnnotations\DependencyInjection\Compiler\DependencyInjectionPass;
 use SimonMarx\Symfony\Bundles\ServiceAnnotations\DependencyInjection\Compiler\NoServicePass;
+use SimonMarx\Symfony\Bundles\ServiceAnnotations\DependencyInjection\Compiler\ParentServicePass;
 use SimonMarx\Symfony\Bundles\ServiceAnnotations\DependencyInjection\Compiler\ServiceAliasPass;
 use SimonMarx\Symfony\Bundles\ServiceAnnotations\DependencyInjection\Compiler\ServiceTagArgumentPass;
 use SimonMarx\Symfony\Bundles\ServiceAnnotations\DependencyInjection\Compiler\ServiceTagPass;
@@ -23,6 +24,7 @@ class SimaServiceAnnotationsBundle extends Bundle
             ->addCompilerPass(new ServiceAliasPass())
             ->addCompilerPass(new DependencyInjectionPass())
             ->addCompilerPass(new ServiceTagArgumentPass())
+            ->addCompilerPass(new ParentServicePass())
             ->addCompilerPass(new NoServicePass());
     }
 }

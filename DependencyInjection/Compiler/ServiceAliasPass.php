@@ -24,7 +24,7 @@ class ServiceAliasPass implements CompilerPassInterface
 
             if (true === $this->definitionHasAnnotation($definition, ServiceAlias::class)) {
                 /** @var ServiceAlias[] $serviceAliases */
-                $serviceAliases = $this->getDefinitionAnnotation($definition, ServiceAlias::class);
+                $serviceAliases = $this->getDefinitionAnnotations($definition, ServiceAlias::class);
 
                 foreach ($serviceAliases as $alias) {
                     $container->setAlias($alias->getName(), $serviceId);
