@@ -16,12 +16,14 @@ class DependencyInjection
     private ?string $serviceId = null;
     private ?string $target = null;
     private ?string $tagged = null;
+    private ?string $parameter = null;
 
     public function __construct(array $values = [])
     {
         $this->serviceId = $values['serviceId'] ?? $values['value'] ?? null;
         $this->target = $values['target'] ?? null;
         $this->tagged = $values['tagged'] ?? null;
+        $this->parameter = $values['parameter'] ?? null;
     }
 
     public function setServiceId(string $serviceId): void
@@ -45,6 +47,11 @@ class DependencyInjection
         }
 
         $this->target = $target;
+    }
+
+    public function getParameter(): ?string
+    {
+        return $this->parameter;
     }
 
     public function getTarget(): ?string

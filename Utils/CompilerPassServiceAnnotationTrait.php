@@ -4,6 +4,8 @@
 namespace SimonMarx\Symfony\Bundles\ServiceAnnotations\Utils;
 
 
+use App\DocReader\AnnotationHandler\RouteAnnotationHandler;
+use App\DocReader\AnnotationHandler\RouteHandler;
 use Doctrine\Common\Annotations\AnnotationReader;
 use ReflectionClass;
 use SimonMarx\Symfony\Bundles\ServiceAnnotations\Annotation\IgnoreParentServiceAnnotations;
@@ -40,7 +42,6 @@ trait CompilerPassServiceAnnotationTrait
         if (false === $this->definitionHasValidClass($definition)) {
             return false;
         }
-
 
         foreach ($this->getDefinitionAnnotations($definition) as $annotation) {
             if ($annotation instanceof $annotationClass) {

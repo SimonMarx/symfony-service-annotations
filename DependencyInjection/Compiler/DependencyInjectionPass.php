@@ -21,8 +21,12 @@ class DependencyInjectionPass implements CompilerPassInterface
     use CompilerPassServiceAnnotationTrait;
     use ReflectionCacheTrait;
 
+    private ContainerBuilder $container;
+
     public function process(ContainerBuilder $container)
     {
+        $this->container = $container;
+
         foreach ($container->getDefinitions() as $definition) {
             if (false === $this->definitionHasValidClass($definition)) {
                 continue;
@@ -33,6 +37,11 @@ class DependencyInjectionPass implements CompilerPassInterface
             $this->handleMethodAnnotations($classAnnotationScan, $definition);
             $this->handlePropertyAnnotations($classAnnotationScan, $definition);
         }
+    }
+
+    private function findParameter(string $name)
+    {
+        return $this->container->getParameter($name);
     }
 
     private function handlePropertyAnnotations(ClassAnnotationScan $annotationScan, Definition $definition)
@@ -55,14 +64,20 @@ class DependencyInjectionPass implements CompilerPassInterface
             $propertyAnnotation = $propertyAnnotations[0];
 
             if (null === $propertyAnnotation->getServiceId() && null === $propertyAnnotation->getTagged()) {
-                throw new InvalidServiceAnnotationException(\sprintf('Property %s::%s has @DependencyInjection without "serviceId" and "tagged" option. One of them must be defined'));
+                throw new InvalidServiceAnnotationException(\sprintf('Property %s::%s has @DependencyInjection without "serviceId", "tagged" or "parameter" option. One of them must be defined', $property->getDeclaringClass()->getName(), $property->getName()));
             }
 
 
             if (null !== $propertyAnnotation->getServiceId()) {
                 $definition->setProperty($property->getName(), service($propertyAnnotation->getServiceId()));
-            } elseif (null !== $propertyAnnotation->getTagged()) {
+            }
+
+            if (null !== $propertyAnnotation->getTagged()) {
                 $definition->setProperty($property->getName(), tagged_iterator($propertyAnnotation->getTagged()));
+            }
+
+            if (null !== $propertyAnnotation->getParameter()) {
+                $definition->setProperty($property->getName(), $this->findParameter($propertyAnnotation->getParameter()));
             }
         }
     }
@@ -96,8 +111,14 @@ class DependencyInjectionPass implements CompilerPassInterface
                 if ($foundTargetAnnotation instanceof DependencyInjection) {
                     if (null !== $foundTargetAnnotation->getServiceId()) {
                         $definition->setArgument(\sprintf('$%s', $parameter->getName()), new Reference($foundTargetAnnotation->getServiceId()));
-                    } elseif (null !== $foundTargetAnnotation->getTagged()) {
+                    }
+
+                    if (null !== $foundTargetAnnotation->getTagged()) {
                         $definition->setArgument(\sprintf('$%s', $parameter->getName()), tagged_iterator($foundTargetAnnotation->getTagged()));
+                    }
+
+                    if (null !== $foundTargetAnnotation->getParameter()) {
+                        $definition->setArgument(\sprintf('$%s', $parameter->getName()), $this->findParameter($foundTargetAnnotation->getParameter()));
                     }
                 }
             }

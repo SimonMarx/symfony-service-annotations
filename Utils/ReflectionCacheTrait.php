@@ -42,6 +42,10 @@ trait ReflectionCacheTrait
     {
         $classReflection = $this->getClassReflection($className, $recursive);
 
+        if (null === $classReflection) {
+            return [];
+        }
+
         $properties = $classReflection->getProperties();
 
         if (false !== $classReflection->getParentClass() && true === $recursive) {
@@ -76,18 +80,16 @@ trait ReflectionCacheTrait
         }
     }
 
-    public function getPropertyReflection(string $className, string $propertyName): ?ReflectionProperty
+    public function getPropertyReflection(string $className, string $propertyName, bool $recursive = false): ?ReflectionProperty
     {
-        $rc = $this->getClassReflection($className);
+        $properties = $this->getPropertyReflections($className, $propertyName, $recursive);
 
-        if (null === $rc) {
-            return null;
+        foreach ($properties as $property) {
+            if ($property->getName() === $propertyName) {
+                return $property;
+            }
         }
 
-        try {
-            return $rc->getProperty($propertyName);
-        } catch (ReflectionException $exception) {
-            return null;
-        }
+        return null;
     }
 }
